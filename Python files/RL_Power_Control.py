@@ -7,14 +7,17 @@ import pandas as pd
 import time
 import os
 
+#get the current working directory
 parent_dir = os.getcwd()
 
+#makes a directory named "plots"
 directory_plots = "plots"
 path_plots = os.path.join(parent_dir, directory_plots)
 print(os.path.isdir(path_plots))
 if(not os.path.isdir(path_plots)):
   os.mkdir(path_plots)
 
+#makes a directory named "logs"
 directory_logs = "logs"
 path_logs = os.path.join(parent_dir, directory_logs)
 print(os.path.isdir(path_logs))
@@ -306,20 +309,20 @@ plt.grid(True)
 plt.title("Individual UE throughput (Mbps) vs. time. Optimal Policy")
 plt.xlabel("Iterations")
 plt.ylabel("Individual UE throughput (Mbps)")
-
 plt.plot(sinr_DF["UE1_Throughput"])
 plot_filename = os.path.join(path_plots, "Individual_UE_throughput_1.png")
 plt.savefig(plot_filename)
-plt.show()
+
 plt.figure(figsize=(10,6))
 plt.grid(True)
 plt.title("Individual UE throughput (Mbps) vs. time. Optimal Policy")
 plt.xlabel("Iterations")
 plt.ylabel("Individual UE throughput (Mbps)")
+
 plt.plot(sinr_DF["UE2_Throughput"])
 plot_filename = os.path.join(path_plots, "Individual_UE_throughput_2.png")
 plt.savefig(plot_filename)
-plt.show()
+
 plt.figure(figsize=(10,6))
 plt.grid(True)
 plt.title("Individual UE throughput (Mbps) vs. time. Optimal Policy")
@@ -328,7 +331,7 @@ plt.ylabel("Individual UE throughput (Mbps)")
 plt.plot(sinr_DF["UE3_Throughput"])
 plot_filename = os.path.join(path_plots, "Individual_UE_throughput_3.png")
 plt.savefig(plot_filename)
-plt.show()
+
 plt.figure(figsize=(10,6))
 plt.grid(True)
 plt.title("Individual UE throughput (Mbps) vs. time. Optimal Policy")
@@ -337,7 +340,7 @@ plt.ylabel("Individual UE throughput (Mbps)")
 plt.plot(sinr_DF["UE4_Throughput"])
 plot_filename = os.path.join(path_plots, "Individual_UE_throughput_4.png")
 plt.savefig(plot_filename)
-plt.show()
+
 plt.figure(figsize=(10,6))
 plt.grid(True)
 plt.title("Individual UE throughput (Mbps) vs. time. Optimal Policy")
@@ -346,7 +349,7 @@ plt.ylabel("Individual UE throughput (Mbps)")
 plt.plot(sinr_DF["UE5_Throughput"])
 plot_filename = os.path.join(path_plots, "Individual_UE_throughput_5.png")
 plt.savefig(plot_filename)
-plt.show()
+
 plt.figure(figsize=(10,6))
 plt.grid(True)
 plt.title("Individual UE throughput (Mbps) vs. time. Optimal Policy")
@@ -355,7 +358,6 @@ plt.ylabel("Individual UE throughput (Mbps)")
 plt.plot(sinr_DF["UE6_Throughput"])
 plot_filename = os.path.join(path_plots, "Individual_UE_throughput_6.png")
 plt.savefig(plot_filename)
-plt.show()
 
 
 #printing the total time taken for the RL simulation
