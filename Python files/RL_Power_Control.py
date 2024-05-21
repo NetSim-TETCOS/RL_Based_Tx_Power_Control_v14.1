@@ -5,6 +5,21 @@ import struct
 import logging
 import pandas as pd
 import time
+import os
+
+parent_dir = os.getcwd()
+
+directory_plots = "plots"
+path_plots = os.path.join(parent_dir, directory_plots)
+print(os.path.isdir(path_plots))
+if(not os.path.isdir(path_plots)):
+  os.mkdir(path_plots)
+
+directory_logs = "logs"
+path_logs = os.path.join(parent_dir, directory_logs)
+print(os.path.isdir(path_logs))
+if(not os.path.isdir(path_logs)):
+    os.mkdir(path_logs)
 
 #registering the start time of the simulation
 start_time = time.time()
@@ -39,15 +54,18 @@ sinr_logger = logging.getLogger('SINR_Logger')
 all_values_logger = logging.getLogger('ALL_VALUE_Logger')
 
 # Create a CSV file handler for logging gNB powers
-gnb_powers_csv_handler = logging.FileHandler('gnb_powers_log.csv', mode='w')
+log_filename = os.path.join(path_logs, "gnb_powers_log.csv")
+gnb_powers_csv_handler = logging.FileHandler(log_filename, mode='w')
 logger.addHandler(gnb_powers_csv_handler)
 
 # Create a CSV file handler for logging SINR values
-sinr_csv_handler = logging.FileHandler('sinr_values_log.csv', mode='w')
+log_filename = os.path.join(path_logs, "sinr_values_log.csv")
+sinr_csv_handler = logging.FileHandler(log_filename, mode='w')
 sinr_logger.addHandler(sinr_csv_handler)
 
 # Create a CSV file handler for logging throuhgputs and sinr values at each iteration 
-all_values_csv_handler = logging.FileHandler('all_values_log.csv', mode='w')
+log_filename = os.path.join(path_logs, "all_values_log.csv")
+all_values_csv_handler = logging.FileHandler(log_filename, mode='w')
 all_values_logger.addHandler(all_values_csv_handler)
 
 
@@ -226,7 +244,7 @@ for episode in range(num_episodes):
         spectral_eff_NETSIM = [get_spectral_eff(i) for i in spectral_eff]
         throughputs_Mbps = [(BW_MHz * i * ue_divider * dl_ul_ratio * overhead_multiplier * app_by_phy) for i in spectral_eff_NETSIM]
 
-        # log_all_values([throughputs_Mbps[0],throughputs_Mbps[1],throughputs_Mbps[2],throughputs_Mbps[3],throughputs_Mbps[4],throughputs_Mbps[5], reward, next_sinr_values[0],next_sinr_values[1],next_sinr_values[2],next_sinr_values[3],next_sinr_values[4],next_sinr_values[5], episode, t])
+        log_all_values([throughputs_Mbps[0],throughputs_Mbps[1],throughputs_Mbps[2],throughputs_Mbps[3],throughputs_Mbps[4],throughputs_Mbps[5], reward, next_sinr_values[0],next_sinr_values[1],next_sinr_values[2],next_sinr_values[3],next_sinr_values[4],next_sinr_values[5], episode, t])
         
         #logging the throughputs and gNB powers in the last episode
         if episode == num_episodes-1:
@@ -249,12 +267,16 @@ plt.plot(total_rewards_per_episode)
 plt.title("Average rewards per episode")
 plt.xlabel("Episodes")
 plt.ylabel("Average Sum Throuhghput(Mbps)")
-plt.savefig("Netsim_Python_Enhanced_Interfacing/Sum_Throughputs.png")
+
+plot_filename = os.path.join(path_plots, "Sum_Throughputs.png")
+plt.savefig(plot_filename)
 plt.show()
 
+log_filename = os.path.join(path_logs, "gnb_powers_log.csv")
+gnb_DF = pd.read_csv(log_filename)
 
-gnb_DF = pd.read_csv("Netsim_Python_Enhanced_Interfacing/gnb_powers_log.csv")
-sinr_DF = pd.read_csv("Netsim_Python_Enhanced_Interfacing/sinr_values_log.csv")
+log_filename = os.path.join(path_logs, "sinr_values_log.csv")
+sinr_DF = pd.read_csv(log_filename)
 
 # Delete the last row from the DataFrame
 gnb_DF.drop(gnb_DF.tail(1).index, inplace=True)
@@ -274,7 +296,8 @@ plt.legend(['gNB1','gNB2','gNB3'])
 plt.title("gNB power vs. Time. Optimal Policy")
 plt.xlabel("Iterations")
 plt.ylabel("gNB power (dBm)")
-plt.savefig("gNB_Powers.png")
+plot_filename = os.path.join(path_plots, "gNB_Powers.png")
+plt.savefig(plot_filename)
 plt.show()
 
 #plotting the UE throughputs in separate plots
@@ -285,7 +308,8 @@ plt.xlabel("Iterations")
 plt.ylabel("Individual UE throughput (Mbps)")
 
 plt.plot(sinr_DF["UE1_Throughput"])
-plt.savefig("Netsim_Python_Enhanced_Interfacing/Individual_UE_throughput_1.png")
+plot_filename = os.path.join(path_plots, "Individual_UE_throughput_1.png")
+plt.savefig(plot_filename)
 plt.show()
 plt.figure(figsize=(10,6))
 plt.grid(True)
@@ -293,7 +317,8 @@ plt.title("Individual UE throughput (Mbps) vs. time. Optimal Policy")
 plt.xlabel("Iterations")
 plt.ylabel("Individual UE throughput (Mbps)")
 plt.plot(sinr_DF["UE2_Throughput"])
-plt.savefig("Netsim_Python_Enhanced_Interfacing/Individual_UE_throughput_2.png")
+plot_filename = os.path.join(path_plots, "Individual_UE_throughput_2.png")
+plt.savefig(plot_filename)
 plt.show()
 plt.figure(figsize=(10,6))
 plt.grid(True)
@@ -301,7 +326,8 @@ plt.title("Individual UE throughput (Mbps) vs. time. Optimal Policy")
 plt.xlabel("Iterations")
 plt.ylabel("Individual UE throughput (Mbps)")
 plt.plot(sinr_DF["UE3_Throughput"])
-plt.savefig("Netsim_Python_Enhanced_Interfacing/Individual_UE_throughput_3.png")
+plot_filename = os.path.join(path_plots, "Individual_UE_throughput_3.png")
+plt.savefig(plot_filename)
 plt.show()
 plt.figure(figsize=(10,6))
 plt.grid(True)
@@ -309,7 +335,8 @@ plt.title("Individual UE throughput (Mbps) vs. time. Optimal Policy")
 plt.xlabel("Iterations")
 plt.ylabel("Individual UE throughput (Mbps)")
 plt.plot(sinr_DF["UE4_Throughput"])
-plt.savefig("Netsim_Python_Enhanced_Interfacing/Individual_UE_throughput_4.png")
+plot_filename = os.path.join(path_plots, "Individual_UE_throughput_4.png")
+plt.savefig(plot_filename)
 plt.show()
 plt.figure(figsize=(10,6))
 plt.grid(True)
@@ -317,7 +344,8 @@ plt.title("Individual UE throughput (Mbps) vs. time. Optimal Policy")
 plt.xlabel("Iterations")
 plt.ylabel("Individual UE throughput (Mbps)")
 plt.plot(sinr_DF["UE5_Throughput"])
-plt.savefig("Netsim_Python_Enhanced_Interfacing/Individual_UE_throughput_5.png")
+plot_filename = os.path.join(path_plots, "Individual_UE_throughput_5.png")
+plt.savefig(plot_filename)
 plt.show()
 plt.figure(figsize=(10,6))
 plt.grid(True)
@@ -325,7 +353,8 @@ plt.title("Individual UE throughput (Mbps) vs. time. Optimal Policy")
 plt.xlabel("Iterations")
 plt.ylabel("Individual UE throughput (Mbps)")
 plt.plot(sinr_DF["UE6_Throughput"])
-plt.savefig("Netsim_Python_Enhanced_Interfacing/Individual_UE_throughput_.png")
+plot_filename = os.path.join(path_plots, "Individual_UE_throughput_6.png")
+plt.savefig(plot_filename)
 plt.show()
 
 
